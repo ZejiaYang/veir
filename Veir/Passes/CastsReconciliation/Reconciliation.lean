@@ -18,7 +18,7 @@ def isRegToI64RoundTrip (inputType interType : TypeAttr): Bool :=
 
 /-!
  We reconcile casts in `builtin.unrealized_conversion_cast` operations for `!llvm.ptr` and `!riscv.reg` types.
- This cast assums that the `.llvmPointerType` is bit-wide.
+ This cast assumes that the `.llvmPointerType` is bit-wide.
 -/
 def isRiscvRegToPtrCast (inputType interType : TypeAttr): Bool :=
  match inputType.val, interType.val with
