@@ -112,7 +112,7 @@ end FloatType
   A register type is an integer type with width 64.
 -/
 structure RegisterType where
-  index: Option Nat := none
+  index: Option Int := none
 deriving Inhabited, Repr, DecidableEq, Hashable
 
 /-- The MLIR builtin `index` type. -/
@@ -972,7 +972,7 @@ instance : ToString RegisterType where
   toString type :=
     match type.index with
     | none => s!"!riscv.reg"
-    | some i => s!"!riscv.reg<x{i}>"
+    | some i => if i >= 0 then s!"!riscv.reg<x{i}>" else s!"!riscv.reg<j{-(i + 1)}>"
 
 instance : ToString RegisterAttr where
   toString attr := s!"{attr.value} : !riscv.reg"
@@ -2195,7 +2195,7 @@ type_attribute_instance PDL.ValueType => Attribute.pdlValueType
 type_attribute_instance PDL.TypeType => Attribute.pdlTypeType
 type_attribute_instance Seq.ClockType => Attribute.seqClockType
 
-instance : CoeDep (Option Nat → RegisterType) RegisterType.mk TypeAttr where
+instance : CoeDep (Option Int → RegisterType) RegisterType.mk TypeAttr where
   coe := TypeAttr.of RegisterType (.mk none)
 
 instance : IsTypeAttr TypeAttr where

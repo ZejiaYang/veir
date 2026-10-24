@@ -171,7 +171,7 @@ def parseOptionalByteType (short := false) : AttrParserM (Option LLVM.ByteType) 
 /--
   Parse an optional register type, which is fundamentally a wrapper for `i64`.
   An unallocated register type is represented as `!riscv.reg`.
-  Allocated register types range from `!riscv.reg<x0>` to `!riscv.reg<x31>`.
+  Allocated register types should be physical and range from `!riscv.reg<x0>` to `!riscv.reg<x31>`.
 -/
 def parseOptionalRegisterType : AttrParserM (Option RegisterType) := do
   let token ← peekToken
@@ -188,7 +188,7 @@ def parseOptionalRegisterType : AttrParserM (Option RegisterType) := do
       if (← (getThe ParserState)).input.getD slice.start.byteOffset 0 == 'x'.toUInt8 then
         let bitwidthSlice : Slice := {start := slice.start + 1, stop := slice.stop}
         let identifier := bitwidthSlice.of (← (getThe ParserState)).input
-        let some reg := (String.fromUTF8? identifier).bind String.toNat? | return none
+        let some reg := (String.fromUTF8? identifier).bind String.toInt? | return none
         if reg > 31 then throwAtCurrentPos "RV64 registers range from x0 to x31"
         let _ ← consumeToken
         parsePunctuation ">"
