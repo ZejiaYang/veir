@@ -109,7 +109,9 @@ end FloatType
 
 
 /--
-  A register type is an integer type with width 64.
+  A register type is an integer type with width 64;
+  Negative indices represent unbounded virtual registers;
+  non-negative indices `0–31` represent the 32 architectural registers.
 -/
 structure RegisterType where
   index: Option Int := none
