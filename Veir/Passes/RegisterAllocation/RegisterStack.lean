@@ -1,7 +1,6 @@
 module
 
 public import Veir.IR.Attribute
-public import Veir.Passes.RegisterAllocation.RegisterFile
 
 meta import Veir.IR.Attribute
 
@@ -10,9 +9,9 @@ namespace Veir
 public section
 
 structure RegStack where
-  /-- Registers released during allocation -/
+  /-- Registers released during allocation. -/
   free : List RegisterType
-  /-- Next infinite register id, used when `free` is empty -/
+  /-- The next virtual register index, used when `free` is empty. -/
   next : Nat
 deriving Inhabited
 
@@ -20,8 +19,10 @@ namespace RegStack
 
 def pop (s: RegStack) : RegisterType × RegStack :=
   match s.free with
+  -- reuse registers in free stack
   | r :: rest => (r, {s with free := rest})
-  | [] => (RegisterFile.virtual RegisterType s.next, {s with next := s.next + 1})
+  -- if free stack is empty, get next virtual register index
+  | [] => (RegisterType.mk (some (-((s.next : Int) + 1))), {s with next := s.next + 1})
 
 def push (s: RegStack) (r: RegisterType) : RegStack :=
   {s with free := r :: s.free}
