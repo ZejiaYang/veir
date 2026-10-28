@@ -35,8 +35,6 @@ variable (α : Type) [RegisterFile α]
 /-- construct unallocated register -/
 def unallocated : α := withIndex none
 
-/-- number of physical registers in the file -/
-def numRegisters : Nat := (abiNames (α := α)).size
 
 /-- construct physical register with index `i` -/
 def physical (i : Nat) : α := withIndex (some i)
@@ -76,7 +74,7 @@ def physIndex? (r : α) : Option Nat :=
 /-- Whether the register is allocated to a physical register. -/
 def isPhysical (r : α) : Bool := (physIndex? r).isSome
 
-/-- The 0-based virtual register id, if the register is virtual: index `-(k + 1)` is `j<k>`. -/
+/-- The 0-based virtual register id, if the register is virtual: index `-(k + 1)` is `{infinitePrefix}<k>`. -/
 def virtualIndex? (r : α) : Option Nat :=
   (index r).bind fun i => if i < 0 then some (-i - 1).toNat else none
 
