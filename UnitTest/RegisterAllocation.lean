@@ -8,13 +8,13 @@ meta import Veir.ForLean
 open Veir
 
 #guard Id.run do
-  let (first, stack) := (default : RegStack).pop
+  let (first, stack) := (default : RegisterStack).pop
   let (second, stack) := stack.pop
   return first.index == some (-1) && second.index == some (-2) &&
     stack.next == 2 && stack.free.isEmpty
 
 #guard Id.run do
-  let (first, stack) := (default : RegStack).pop
+  let (first, stack) := (default : RegisterStack).pop
   let (second, stack) := stack.pop
   let stack := (stack.push first).push second
   let (reusedSecond, stack) := stack.pop
@@ -34,7 +34,7 @@ private def addTestOp (ctx : WfIRContext OpCode) (block : BlockPtr)
   (WfRewriter.createOp! ctx Test.test types operands #[] #[] ()
     (some (.atEnd block))).get!
 
-private def testAllocateRegister (type : TypeAttr) (stack : RegStack := default) :
+private def testAllocateRegister (type : TypeAttr) (stack : RegisterStack := default) :
     Except String (RegisterType × TypeAttr × List RegisterType × Nat) := do
   let (ctx, block) := emptyBlock
   let (ctx, op) := addTestOp ctx block #[type]

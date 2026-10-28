@@ -8,8 +8,8 @@ public import Veir.GlobalOpInfo
 namespace Veir
 
 
-def allocateRegister (ctx : WfIRContext OpCode) (value : ValuePtr) (stack : RegStack) :
-    Except String (WfIRContext OpCode × RegStack × RegisterType) := do
+def allocateRegister (ctx : WfIRContext OpCode) (value : ValuePtr) (stack : RegisterStack) :
+    Except String (WfIRContext OpCode × RegisterStack × RegisterType) := do
   let .registerType reg := (value.getType! ctx.raw).val
     | throw "expected a register-typed value"
   if reg.index.isSome then return (ctx, stack, reg)
@@ -17,8 +17,8 @@ def allocateRegister (ctx : WfIRContext OpCode) (value : ValuePtr) (stack : RegS
   let ctx := WfRewriter.setType! ctx value reg
   return (ctx, s, reg)
 
-def allocateOps (ctx: WfIRContext OpCode) (op: OperationPtr) (stack: RegStack) :
-    Except String (WfIRContext OpCode × RegStack) := do
+def allocateOps (ctx: WfIRContext OpCode) (op: OperationPtr) (stack: RegisterStack) :
+    Except String (WfIRContext OpCode × RegisterStack) := do
     let mut ctx := ctx
     let mut stack := stack
     let mut resultRegs : Array RegisterType := #[]
@@ -48,7 +48,7 @@ def allocateBlock (ctx: WfIRContext OpCode) (block: BlockPtr):
     Except String (WfIRContext OpCode) := do
 
     let mut ctx := ctx
-    let mut stack : RegStack := default
+    let mut stack : RegisterStack := default
     let mut cur? := block.getLastOp! ctx.raw
 
     while let some cur := cur? do
