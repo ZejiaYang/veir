@@ -7,7 +7,7 @@ public import Veir.GlobalOpInfo
 
 namespace Veir
 
-
+public section
 def allocateRegister (ctx : WfIRContext OpCode) (value : ValuePtr) (stack : RegisterStack) :
     Except String (WfIRContext OpCode × RegisterStack × RegisterType) := do
   let .registerType reg := (value.getType! ctx.raw).val
@@ -17,7 +17,7 @@ def allocateRegister (ctx : WfIRContext OpCode) (value : ValuePtr) (stack : Regi
   let ctx := WfRewriter.setType! ctx value reg
   return (ctx, s, reg)
 
-def allocateOps (ctx: WfIRContext OpCode) (op: OperationPtr) (stack: RegisterStack) :
+def allocateOp (ctx: WfIRContext OpCode) (op: OperationPtr) (stack: RegisterStack) :
     Except String (WfIRContext OpCode × RegisterStack) := do
     let mut ctx := ctx
     let mut stack := stack
@@ -43,7 +43,6 @@ def allocateOps (ctx: WfIRContext OpCode) (op: OperationPtr) (stack: RegisterSta
 
     return (ctx, stack)
 
-public section
 def allocateBlock (ctx: WfIRContext OpCode) (block: BlockPtr):
     Except String (WfIRContext OpCode) := do
 
@@ -52,7 +51,7 @@ def allocateBlock (ctx: WfIRContext OpCode) (block: BlockPtr):
     let mut cur? := block.getLastOp! ctx.raw
 
     while let some cur := cur? do
-        let (newCtx, newStack) ← allocateOps ctx cur stack
+        let (newCtx, newStack) ← allocateOp ctx cur stack
         ctx := newCtx
         stack := newStack
         cur? := cur.getPrevOp! ctx.raw

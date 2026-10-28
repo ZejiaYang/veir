@@ -1,9 +1,10 @@
 module
-import all Veir.Passes.RegisterAllocation.RegisterAllocator
-public import Veir.Passes.RegisterAllocation.RegisterStack
 
-meta import all Veir.Passes.RegisterAllocation.RegisterAllocator
-meta import Veir.ForLean
+public import Veir.Passes.RegisterAllocation.RegisterAllocator
+public import Veir.Passes.RegisterAllocation.RegisterStack
+meta import Veir.Passes.RegisterAllocation.RegisterAllocator
+meta import Veir.Passes.RegisterAllocation.RegisterStack
+
 
 open Veir
 
